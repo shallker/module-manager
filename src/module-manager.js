@@ -64,7 +64,7 @@
          * 判断模块路径是否存在
          */
         if (typeof moduleStore[path] === 'undefined') {
-            throw new Error('module is not defined');
+            throw new Error(['module', path, 'is not defined'].join(' '));
         }
 
         /**
