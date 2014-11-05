@@ -8,6 +8,26 @@
     var moduleStore = {};
 
     /**
+     * 检测是否为空对象
+     * @param {Mix} object 检测对象
+     */
+    function isEmpty(object) {
+        if (typeof object === 'function') {
+            return false;
+        }
+
+        if (object == null || object === undefined) {
+            return true;
+        }
+
+        for (var i in object) {
+            if (object.hasOwnProperty(i)) return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 定义模块
      *
      * 使用：
@@ -93,7 +113,10 @@
 
         moduleFunc.call({}, require, exports, module);
 
-        if (module.exports === emptyObject2) {
+        /**
+         * 如果没有输出，则默认输出undefined
+         */
+        if (isEmpty(module.exports)) {
             module.exports = undefined;
         }
 
