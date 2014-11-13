@@ -7,6 +7,9 @@
      */
     var moduleStore = {};
 
+    // 已被执行的模块储存
+    var moduleExecutedStore = {};
+
     /**
      * 检测是否为空对象
      * @param {Mix} object 检测对象
@@ -98,6 +101,11 @@
         var moduleRepo = pathSegment.shift();
         var modulePath = pathSegment.join('');
 
+        // 判断是否是已执行过的模块
+        if (typeof moduleExecutedStore[path] !== 'undefined') {
+            return moduleExecutedStore[path].moduleExports;
+        }
+
         /**
          * 获取模块函数
          */
@@ -112,6 +120,13 @@
         var exports = module.exports = emptyObject2;
 
         moduleFunc.call({}, require, exports, module);
+
+        // 将执行过的模块记录起来，下次不再执行，直接返回结果
+        moduleExecutedStore[path] = {
+            func: moduleFunc,
+            module: module,
+            moduleExports: module.exports
+        }
 
         /**
          * 如果没有输出，则默认输出undefined
